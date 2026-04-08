@@ -16,21 +16,20 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-glass-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-bold text-lg">
-          <Zap className="w-5 h-5 text-neon-cyan" />
-          <span className="gradient-text">StudyFlare</span>
+          <Zap className="w-5 h-5 text-brand" />
+          <span className="text-foreground">StudyFlare</span>
         </Link>
 
-        {/* Desktop nav */}
         <div className="hidden sm:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={`text-sm transition-colors ${
-                location.pathname === link.path ? "text-neon-cyan" : "text-muted-foreground hover:text-foreground"
+              className={`text-sm transition-colors font-medium ${
+                location.pathname === link.path ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {link.label}
@@ -48,27 +47,25 @@ const Navbar = () => {
             </>
           ) : (
             <Link to="/auth">
-              <Button variant="neon" size="sm">Sign In</Button>
+              <Button variant="default" size="sm">Sign In</Button>
             </Link>
           )}
         </div>
 
-        {/* Mobile toggle */}
         <button className="sm:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="sm:hidden glass border-t border-glass-border p-4 space-y-3">
+        <div className="sm:hidden bg-background border-t border-border p-4 space-y-3">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setMobileOpen(false)}
               className={`block text-sm py-2 ${
-                location.pathname === link.path ? "text-neon-cyan" : "text-muted-foreground"
+                location.pathname === link.path ? "text-foreground font-medium" : "text-muted-foreground"
               }`}
             >
               {link.label}
@@ -80,7 +77,7 @@ const Navbar = () => {
             </Button>
           ) : (
             <Link to="/auth" onClick={() => setMobileOpen(false)}>
-              <Button variant="neon" size="sm" className="w-full">Sign In</Button>
+              <Button variant="default" size="sm" className="w-full">Sign In</Button>
             </Link>
           )}
         </div>

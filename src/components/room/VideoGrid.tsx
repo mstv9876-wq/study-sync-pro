@@ -1,4 +1,4 @@
-import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { Mic } from "lucide-react";
 
 interface Member {
   user_id: string;
@@ -17,13 +17,13 @@ const VideoGrid = ({ members }: { members: Member[] }) => {
           ? m.profiles[0]?.display_name || "User"
           : m.profiles?.display_name || "User";
         return (
-          <div key={m.user_id} className="glass rounded-xl flex flex-col items-center justify-center aspect-video relative">
-            <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-xl mb-2">
+          <div key={m.user_id} className="bg-card rounded-xl flex flex-col items-center justify-center aspect-video relative border border-border shadow-sm">
+            <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-xl mb-2 text-white">
               {name.charAt(0).toUpperCase()}
             </div>
-            <span className="text-sm font-medium">{name}</span>
+            <span className="text-sm font-medium text-foreground">{name}</span>
             <div className="absolute bottom-2 right-2">
-              <Mic className="w-3.5 h-3.5 text-neon-cyan" />
+              <Mic className="w-3.5 h-3.5 text-brand" />
             </div>
           </div>
         );

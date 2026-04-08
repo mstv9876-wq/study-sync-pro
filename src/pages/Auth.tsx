@@ -60,17 +60,14 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
-      <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-neon-cyan/10 blur-[120px]" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-neon-violet/10 blur-[120px]" />
-
-      <div className="glass rounded-2xl p-8 w-full max-w-md relative z-10">
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-card rounded-2xl p-8 w-full max-w-md border border-border shadow-lg">
         <div className="flex items-center gap-2 justify-center mb-6">
-          <Zap className="w-6 h-6 text-neon-cyan" />
-          <span className="text-2xl font-bold gradient-text">StudyFlare</span>
+          <Zap className="w-6 h-6 text-brand" />
+          <span className="text-2xl font-bold text-foreground">StudyFlare</span>
         </div>
 
-        <h2 className="text-xl font-semibold text-center mb-6">
+        <h2 className="text-xl font-semibold text-center mb-6 text-foreground">
           {isLogin ? "Welcome Back" : "Create Account"}
         </h2>
 
@@ -82,7 +79,7 @@ const Auth = () => {
                 placeholder="Full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="pl-9 bg-muted border-border"
+                className="pl-9"
               />
             </div>
           )}
@@ -93,7 +90,7 @@ const Auth = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-9 bg-muted border-border"
+              className="pl-9"
             />
           </div>
           <div className="relative">
@@ -103,10 +100,10 @@ const Auth = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-9 bg-muted border-border"
+              className="pl-9"
             />
           </div>
-          <Button variant="neon" className="w-full" disabled={loading}>
+          <Button variant="default" className="w-full" disabled={loading}>
             {loading ? "Loading..." : isLogin ? "Sign In" : "Sign Up"}
           </Button>
         </form>
@@ -115,7 +112,7 @@ const Auth = () => {
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-neon-cyan hover:underline"
+            className="text-brand hover:underline font-medium"
           >
             {isLogin ? "Sign up" : "Sign in"}
           </button>

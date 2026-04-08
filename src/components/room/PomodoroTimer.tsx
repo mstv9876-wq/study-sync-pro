@@ -18,7 +18,7 @@ const PomodoroTimer = () => {
   const progress = (1 - seconds / total) * 100;
 
   return (
-    <div className="glass rounded-xl p-6 text-center">
+    <div className="bg-card rounded-xl p-6 text-center border border-border shadow-sm">
       <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
         {isBreak ? "Break Time" : "Focus Session"}
       </div>
@@ -30,21 +30,21 @@ const PomodoroTimer = () => {
             strokeDasharray={`${2 * Math.PI * 54}`}
             strokeDashoffset={`${2 * Math.PI * 54 * (1 - progress / 100)}`}
             strokeLinecap="round"
-            className={isBreak ? "stroke-neon-violet" : "stroke-neon-cyan"}
+            stroke={isBreak ? "hsl(280 60% 55%)" : "hsl(var(--brand))"}
             style={{ transition: "stroke-dashoffset 0.5s ease" }}
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-4xl font-mono font-bold tabular-nums">
+          <span className="text-4xl font-mono font-bold tabular-nums text-foreground">
             {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
           </span>
         </div>
       </div>
       <div className="flex items-center justify-center gap-3">
-        <Button variant="neon" size="icon" onClick={isRunning ? pause : start}>
+        <Button variant="default" size="icon" onClick={isRunning ? pause : start}>
           {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </Button>
-        <Button variant="glass" size="icon" onClick={reset}>
+        <Button variant="outline" size="icon" onClick={reset}>
           <RotateCcw className="w-4 h-4" />
         </Button>
       </div>

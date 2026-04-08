@@ -16,18 +16,18 @@ const BuddyMatchPanel = () => {
   if (!buddies.length) return null;
 
   return (
-    <div className="glass rounded-xl p-4">
-      <h3 className="font-semibold text-sm flex items-center gap-2 mb-3">
-        <Users className="w-4 h-4 text-neon-magenta" /> Suggested Buddies
+    <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
+      <h3 className="font-semibold text-sm flex items-center gap-2 mb-3 text-foreground">
+        <Users className="w-4 h-4 text-brand" /> Suggested Buddies
       </h3>
       <div className="space-y-2">
         {buddies.slice(0, 5).map((b) => (
-          <div key={b.user_id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/30 transition-colors">
-            <div className="w-8 h-8 rounded-full gradient-accent flex items-center justify-center text-sm">
+          <div key={b.user_id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors">
+            <div className="w-8 h-8 rounded-full gradient-accent flex items-center justify-center text-sm text-white">
               {b.display_name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium truncate">{b.display_name}</div>
+              <div className="text-sm font-medium truncate text-foreground">{b.display_name}</div>
               <div className="text-xs text-muted-foreground">
                 {b.interests?.join(", ")} • Score: {b.focus_score}
               </div>

@@ -13,12 +13,12 @@ const DistractionReminder = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
-          className="fixed bottom-6 right-6 z-50 glass rounded-xl p-4 max-w-sm neon-glow-violet border border-neon-violet/30"
+          className="fixed bottom-6 right-6 z-50 bg-card rounded-xl p-4 max-w-sm shadow-lg border border-yellow-200"
         >
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-neon-magenta shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
             <div className="flex-1">
-              <h4 className="font-semibold text-sm mb-1">Stay Focused! 🎯</h4>
+              <h4 className="font-semibold text-sm mb-1 text-foreground">Stay Focused! 🎯</h4>
               <p className="text-xs text-muted-foreground">
                 You've switched tabs {tabSwitchCount} times. Try to stay focused on your study session.
               </p>

@@ -20,12 +20,12 @@ const SessionNotes = ({ initialNotes = "", onSave }: SessionNotesProps) => {
   };
 
   return (
-    <div className="glass rounded-xl p-4 flex flex-col gap-3">
+    <div className="bg-card rounded-xl p-4 flex flex-col gap-3 border border-border shadow-sm">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-sm flex items-center gap-2">
-          <FileText className="w-4 h-4 text-neon-violet" /> Session Notes
+        <h3 className="font-semibold text-sm flex items-center gap-2 text-foreground">
+          <FileText className="w-4 h-4 text-brand" /> Session Notes
         </h3>
-        <Button variant="neon" size="sm" onClick={handleSave} disabled={saved}>
+        <Button variant="default" size="sm" onClick={handleSave} disabled={saved}>
           <Save className="w-3 h-3 mr-1" /> Save
         </Button>
       </div>
@@ -33,7 +33,7 @@ const SessionNotes = ({ initialNotes = "", onSave }: SessionNotesProps) => {
         value={notes}
         onChange={(e) => { setNotes(e.target.value); setSaved(false); }}
         placeholder="Write your study notes here... (Markdown supported)"
-        className="bg-muted border-border min-h-[120px] text-sm resize-none"
+        className="min-h-[120px] text-sm resize-none"
       />
     </div>
   );

@@ -12,23 +12,23 @@ interface RoomCardProps {
 }
 
 const topicColors: Record<string, string> = {
-  DSA: "text-neon-cyan border-neon-cyan/30 bg-neon-cyan/10",
-  MERN: "text-neon-violet border-neon-violet/30 bg-neon-violet/10",
-  AI: "text-neon-magenta border-neon-magenta/30 bg-neon-magenta/10",
-  General: "text-muted-foreground border-border bg-muted/30",
+  DSA: "text-blue-600 border-blue-200 bg-blue-50",
+  MERN: "text-purple-600 border-purple-200 bg-purple-50",
+  AI: "text-pink-600 border-pink-200 bg-pink-50",
+  General: "text-muted-foreground border-border bg-muted",
 };
 
 const RoomCard = ({ id, name, topic, userCount, isPrivate, isGlobal }: RoomCardProps) => (
-  <div className={`glass rounded-xl p-5 flex flex-col gap-4 hover:border-neon-cyan/30 transition-colors ${isGlobal ? "neon-glow-cyan" : ""}`}>
+  <div className={`bg-card rounded-xl p-5 flex flex-col gap-4 border border-border shadow-sm hover:shadow-md transition-shadow`}>
     <div className="flex items-start justify-between">
       <div>
         <div className="flex items-center gap-2 mb-1">
           {isGlobal ? (
-            <Globe className="w-4 h-4 text-neon-cyan" />
+            <Globe className="w-4 h-4 text-brand" />
           ) : isPrivate ? (
             <Lock className="w-4 h-4 text-muted-foreground" />
           ) : null}
-          <h3 className="font-semibold">{name}</h3>
+          <h3 className="font-semibold text-foreground">{name}</h3>
         </div>
         <span className={`text-xs px-2 py-0.5 rounded-full border ${topicColors[topic] || topicColors.General}`}>
           {topic}
@@ -46,7 +46,7 @@ const RoomCard = ({ id, name, topic, userCount, isPrivate, isGlobal }: RoomCardP
     </div>
 
     <Link to={`/room/${id}`}>
-      <Button variant={isGlobal ? "neon" : "glass"} size="sm" className="w-full">
+      <Button variant={isGlobal ? "default" : "outline"} size="sm" className="w-full">
         {isGlobal ? "Join Global Room" : "Enter Room"}
       </Button>
     </Link>

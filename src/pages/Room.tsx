@@ -24,7 +24,6 @@ const Room = () => {
 
   useDistractionDetection(true);
 
-  // Fetch room info
   useEffect(() => {
     if (!roomId) return;
     setCurrentRoom(roomId);
@@ -34,14 +33,10 @@ const Room = () => {
     return () => setCurrentRoom(null);
   }, [roomId, setCurrentRoom]);
 
-  // Join room + realtime members
   useEffect(() => {
     if (!roomId || !user) return;
-
-    // Join
     supabase.from("room_members").upsert({ room_id: roomId, user_id: user.id }, { onConflict: "room_id,user_id" }).then(() => {});
 
-    // Fetch members
     const fetchMembers = async () => {
       const { data } = await supabase
         .from("room_members")
@@ -51,7 +46,6 @@ const Room = () => {
     };
     fetchMembers();
 
-    // Subscribe
     const channel = supabase
       .channel(`room-members-${roomId}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "room_members", filter: `room_id=eq.${roomId}` }, () => {
@@ -59,17 +53,13 @@ const Room = () => {
       })
       .subscribe();
 
-    // Leave on unmount
     return () => {
       supabase.from("room_members").delete().eq("room_id", roomId).eq("user_id", user.id).then(() => {});
       supabase.removeChannel(channel);
     };
   }, [roomId, user]);
 
-  const handleSaveNotes = useCallback(async (notes: string) => {
-    // Save notes to the active session if we have one
-    // For now just local
-  }, []);
+  const handleSaveNotes = useCallback(async (notes: string) => {}, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -78,14 +68,14 @@ const Room = () => {
       <main className="flex-1 container mx-auto px-4 pt-20 pb-4 flex flex-col gap-4 overflow-hidden">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold">{room?.name || `Room: ${roomId}`}</h1>
+            <h1 className="text-xl font-bold text-foreground">{room?.name || `Room: ${roomId}`}</h1>
             <p className="text-sm text-muted-foreground">{members.length} participants • {room?.topic || "General"}</p>
           </div>
           <div className="flex gap-2">
-            <Button variant={mic ? "glass" : "destructive"} size="icon" onClick={toggleMic}>
+            <Button variant={mic ? "outline" : "destructive"} size="icon" onClick={toggleMic}>
               {mic ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
             </Button>
-            <Button variant={cam ? "glass" : "destructive"} size="icon" onClick={toggleCam}>
+            <Button variant={cam ? "outline" : "destructive"} size="icon" onClick={toggleCam}>
               {cam ? <Video className="w-4 h-4" /> : <VideoOff className="w-4 h-4" />}
             </Button>
             <Link to="/dashboard">

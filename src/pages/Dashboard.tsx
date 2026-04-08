@@ -75,40 +75,40 @@ const Dashboard = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl font-bold mb-1">Study Rooms</h1>
+              <h1 className="text-3xl font-bold mb-1 text-foreground">Study Rooms</h1>
               <p className="text-muted-foreground">Find a room or create your own</p>
             </div>
             <div className="flex gap-2">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="neon-outline" size="sm"><Hash className="w-4 h-4 mr-1" /> Join by Code</Button>
+                  <Button variant="outline" size="sm"><Hash className="w-4 h-4 mr-1" /> Join by Code</Button>
                 </DialogTrigger>
-                <DialogContent className="glass border-glass-border">
+                <DialogContent>
                   <DialogHeader><DialogTitle>Join Private Room</DialogTitle></DialogHeader>
                   <div className="flex gap-2 mt-4">
-                    <Input placeholder="Enter room code..." value={joinCode} onChange={(e) => setJoinCode(e.target.value)} className="bg-muted border-border" />
-                    <Button variant="neon" onClick={joinByCode}>Join</Button>
+                    <Input placeholder="Enter room code..." value={joinCode} onChange={(e) => setJoinCode(e.target.value)} />
+                    <Button variant="default" onClick={joinByCode}>Join</Button>
                   </div>
                 </DialogContent>
               </Dialog>
               <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="neon" size="sm"><Plus className="w-4 h-4 mr-1" /> Create Room</Button>
+                  <Button variant="default" size="sm"><Plus className="w-4 h-4 mr-1" /> Create Room</Button>
                 </DialogTrigger>
-                <DialogContent className="glass border-glass-border">
+                <DialogContent>
                   <DialogHeader><DialogTitle>Create Study Room</DialogTitle></DialogHeader>
                   <div className="space-y-4 mt-4">
-                    <Input placeholder="Room name..." value={newRoom.name} onChange={(e) => setNewRoom({ ...newRoom, name: e.target.value })} className="bg-muted border-border" />
+                    <Input placeholder="Room name..." value={newRoom.name} onChange={(e) => setNewRoom({ ...newRoom, name: e.target.value })} />
                     <div className="flex gap-2">
                       {["DSA", "MERN", "AI"].map((t) => (
-                        <Button key={t} variant={newRoom.topic === t ? "neon" : "glass"} size="sm" onClick={() => setNewRoom({ ...newRoom, topic: t })}>{t}</Button>
+                        <Button key={t} variant={newRoom.topic === t ? "default" : "outline"} size="sm" onClick={() => setNewRoom({ ...newRoom, topic: t })}>{t}</Button>
                       ))}
                     </div>
-                    <label className="flex items-center gap-2 text-sm">
+                    <label className="flex items-center gap-2 text-sm text-foreground">
                       <input type="checkbox" checked={newRoom.isPrivate} onChange={(e) => setNewRoom({ ...newRoom, isPrivate: e.target.checked })} className="rounded" />
                       Private room
                     </label>
-                    <Button variant="neon" className="w-full" onClick={createRoom}>Create Room</Button>
+                    <Button variant="default" className="w-full" onClick={createRoom}>Create Room</Button>
                   </div>
                 </DialogContent>
               </Dialog>
@@ -118,11 +118,11 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input placeholder="Search rooms..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 bg-muted border-border" />
+              <Input placeholder="Search rooms..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
             <div className="flex gap-2">
               {TOPICS.map((t) => (
-                <Button key={t} variant={filter === t ? "neon" : "glass"} size="sm" onClick={() => setFilter(t)}>{t}</Button>
+                <Button key={t} variant={filter === t ? "default" : "outline"} size="sm" onClick={() => setFilter(t)}>{t}</Button>
               ))}
             </div>
           </div>

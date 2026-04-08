@@ -14,7 +14,195 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      messages: {
+        Row: {
+          created_at: string
+          id: string
+          room_id: string
+          text: string
+          user_id: string
+          user_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          room_id: string
+          text: string
+          user_id: string
+          user_name?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          room_id?: string
+          text?: string
+          user_id?: string
+          user_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          badges: string[] | null
+          created_at: string
+          display_name: string
+          focus_score: number | null
+          id: string
+          interests: string[] | null
+          streak: number | null
+          total_study_time: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          badges?: string[] | null
+          created_at?: string
+          display_name?: string
+          focus_score?: number | null
+          id?: string
+          interests?: string[] | null
+          streak?: number | null
+          total_study_time?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          badges?: string[] | null
+          created_at?: string
+          display_name?: string
+          focus_score?: number | null
+          id?: string
+          interests?: string[] | null
+          streak?: number | null
+          total_study_time?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      room_members: {
+        Row: {
+          id: string
+          joined_at: string
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rooms: {
+        Row: {
+          created_at: string
+          host_id: string | null
+          id: string
+          is_global: boolean | null
+          is_private: boolean | null
+          name: string
+          room_code: string | null
+          topic: string
+          updated_at: string
+          user_count: number | null
+        }
+        Insert: {
+          created_at?: string
+          host_id?: string | null
+          id?: string
+          is_global?: boolean | null
+          is_private?: boolean | null
+          name: string
+          room_code?: string | null
+          topic?: string
+          updated_at?: string
+          user_count?: number | null
+        }
+        Update: {
+          created_at?: string
+          host_id?: string | null
+          id?: string
+          is_global?: boolean | null
+          is_private?: boolean | null
+          name?: string
+          room_code?: string | null
+          topic?: string
+          updated_at?: string
+          user_count?: number | null
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          created_at: string
+          duration: number | null
+          end_time: string | null
+          focus_score: number | null
+          id: string
+          notes: string | null
+          room_id: string | null
+          start_time: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration?: number | null
+          end_time?: string | null
+          focus_score?: number | null
+          id?: string
+          notes?: string | null
+          room_id?: string | null
+          start_time?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration?: number | null
+          end_time?: string | null
+          focus_score?: number | null
+          id?: string
+          notes?: string | null
+          room_id?: string | null
+          start_time?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,85 +1,171 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import { Clock, Flame, Award, Target, BookOpen } from "lucide-react";
+import { useAuthStore } from "@/stores/authStore";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
-const badges = [
-  { icon: "🔥", label: "7-Day Streak", earned: true },
-  { icon: "⏱", label: "10 Hours Studied", earned: true },
-  { icon: "🎯", label: "First Session", earned: true },
-  { icon: "⚡", label: "5 Rooms Joined", earned: false },
+const AVAILABLE_INTERESTS = ["DSA", "MERN", "AI"];
+
+const allBadges = [
+  { icon: "🔥", label: "7-Day Streak", key: "streak_7" },
+  { icon: "⏱", label: "10 Hours Studied", key: "hours_10" },
+  { icon: "🎯", label: "First Session", key: "first_session" },
+  { icon: "⚡", label: "5 Rooms Joined", key: "rooms_5" },
 ];
 
-const sessions = [
-  { date: "Apr 7", topic: "DSA - Binary Trees", duration: "1h 45m", score: 92 },
-  { date: "Apr 6", topic: "MERN - React Hooks", duration: "2h 10m", score: 88 },
-  { date: "Apr 5", topic: "AI - Neural Networks", duration: "1h 20m", score: 95 },
-];
+const Profile = () => {
+  const { user, profile, fetchProfile } = useAuthStore();
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [editingName, setEditingName] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
-const Profile = () => (
-  <div className="min-h-screen bg-background">
-    <Navbar />
-    <main className="container mx-auto px-6 pt-24 pb-12 max-w-3xl">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        {/* Profile header */}
-        <div className="glass rounded-xl p-6 mb-6 flex items-center gap-6">
-          <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center text-3xl">
-            🧑‍💻
-          </div>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold">Arjun Kumar</h1>
-            <p className="text-muted-foreground text-sm">CSE Student • DSA, MERN, AI</p>
-          </div>
-        </div>
+  useEffect(() => {
+    if (profile) {
+      setNewName(profile.display_name);
+      setSelectedInterests(profile.interests || []);
+    }
+  }, [profile]);
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {[
-            { icon: Clock, label: "Total Hours", value: "142h" },
-            { icon: Flame, label: "Streak", value: "23 days" },
-            { icon: Target, label: "Focus Score", value: "94" },
-            { icon: BookOpen, label: "Sessions", value: "67" },
-          ].map((s) => (
-            <div key={s.label} className="glass rounded-xl p-4 text-center">
-              <s.icon className="w-5 h-5 text-neon-cyan mx-auto mb-1" />
-              <div className="text-xl font-bold">{s.value}</div>
-              <div className="text-xs text-muted-foreground">{s.label}</div>
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("sessions")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(10)
+      .then(({ data }) => { if (data) setSessions(data); });
+  }, [user]);
+
+  const updateProfile = async (updates: { display_name?: string; interests?: string[]; avatar_url?: string }) => {
+    if (!user) return;
+    const { error } = await supabase.from("profiles").update(updates).eq("user_id", user.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success("Profile updated!");
+    fetchProfile(user.id);
+  };
+
+  const toggleInterest = (interest: string) => {
+    const updated = selectedInterests.includes(interest)
+      ? selectedInterests.filter((i) => i !== interest)
+      : [...selectedInterests, interest];
+    setSelectedInterests(updated);
+    updateProfile({ interests: updated });
+  };
+
+  if (!user || !profile) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main className="container mx-auto px-6 pt-24 pb-12 max-w-3xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          {/* Profile header */}
+          <div className="glass rounded-xl p-6 mb-6 flex items-center gap-6">
+            <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center text-3xl">
+              {profile.display_name.charAt(0).toUpperCase()}
             </div>
-          ))}
-        </div>
-
-        {/* Badges */}
-        <h2 className="font-semibold text-lg mb-3 flex items-center gap-2">
-          <Award className="w-5 h-5 text-neon-violet" /> Badges
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          {badges.map((b) => (
-            <div
-              key={b.label}
-              className={`glass rounded-xl p-4 text-center ${b.earned ? "" : "opacity-40"}`}
-            >
-              <span className="text-2xl">{b.icon}</span>
-              <div className="text-xs mt-1 font-medium">{b.label}</div>
-              {b.earned && <div className="text-xs text-neon-cyan mt-0.5">Earned</div>}
+            <div className="flex-1">
+              {editingName ? (
+                <div className="flex gap-2 items-center">
+                  <Input value={newName} onChange={(e) => setNewName(e.target.value)} className="bg-muted border-border max-w-xs" />
+                  <Button variant="neon" size="sm" onClick={() => { updateProfile({ display_name: newName }); setEditingName(false); }}>Save</Button>
+                </div>
+              ) : (
+                <h1 className="text-2xl font-bold cursor-pointer hover:text-neon-cyan transition-colors" onClick={() => setEditingName(true)}>
+                  {profile.display_name}
+                </h1>
+              )}
+              <p className="text-muted-foreground text-sm">{user.email}</p>
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* Recent sessions */}
-        <h2 className="font-semibold text-lg mb-3">Recent Sessions</h2>
-        <div className="space-y-3">
-          {sessions.map((s) => (
-            <div key={s.date + s.topic} className="glass rounded-xl p-4 flex items-center justify-between">
-              <div>
-                <div className="font-medium text-sm">{s.topic}</div>
-                <div className="text-xs text-muted-foreground">{s.date} • {s.duration}</div>
+          {/* Interests */}
+          <div className="glass rounded-xl p-4 mb-6">
+            <h3 className="font-semibold text-sm mb-3">Your Interests</h3>
+            <div className="flex gap-2">
+              {AVAILABLE_INTERESTS.map((interest) => (
+                <Button
+                  key={interest}
+                  variant={selectedInterests.includes(interest) ? "neon" : "glass"}
+                  size="sm"
+                  onClick={() => toggleInterest(interest)}
+                >
+                  {interest}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            {[
+              { icon: Clock, label: "Total Hours", value: `${profile.total_study_time}h` },
+              { icon: Flame, label: "Streak", value: `${profile.streak} days` },
+              { icon: Target, label: "Focus Score", value: `${profile.focus_score}` },
+              { icon: BookOpen, label: "Sessions", value: `${sessions.length}` },
+            ].map((s) => (
+              <div key={s.label} className="glass rounded-xl p-4 text-center">
+                <s.icon className="w-5 h-5 text-neon-cyan mx-auto mb-1" />
+                <div className="text-xl font-bold">{s.value}</div>
+                <div className="text-xs text-muted-foreground">{s.label}</div>
               </div>
-              <div className="text-neon-cyan font-bold">{s.score}</div>
+            ))}
+          </div>
+
+          {/* Badges */}
+          <h2 className="font-semibold text-lg mb-3 flex items-center gap-2">
+            <Award className="w-5 h-5 text-neon-violet" /> Badges
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+            {allBadges.map((b) => {
+              const earned = profile.badges?.includes(b.key);
+              return (
+                <div key={b.key} className={`glass rounded-xl p-4 text-center ${earned ? "" : "opacity-40"}`}>
+                  <span className="text-2xl">{b.icon}</span>
+                  <div className="text-xs mt-1 font-medium">{b.label}</div>
+                  {earned && <div className="text-xs text-neon-cyan mt-0.5">Earned</div>}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Recent sessions */}
+          <h2 className="font-semibold text-lg mb-3">Recent Sessions</h2>
+          {sessions.length > 0 ? (
+            <div className="space-y-3">
+              {sessions.map((s) => (
+                <div key={s.id} className="glass rounded-xl p-4 flex items-center justify-between">
+                  <div>
+                    <div className="font-medium text-sm">{s.notes?.slice(0, 50) || "Study session"}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(s.start_time).toLocaleDateString()} • {Math.round((s.duration || 0) / 60)}m
+                    </div>
+                  </div>
+                  <div className="text-neon-cyan font-bold">{s.focus_score || 0}</div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </motion.div>
-    </main>
-  </div>
-);
+          ) : (
+            <div className="glass rounded-xl p-8 text-center text-muted-foreground">
+              No sessions yet. Join a room to start studying!
+            </div>
+          )}
+        </motion.div>
+      </main>
+    </div>
+  );
+};
 
 export default Profile;

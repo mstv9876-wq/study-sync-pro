@@ -42,7 +42,7 @@ const Profile = () => {
       .then(({ data }) => { if (data) setSessions(data); });
   }, [user]);
 
-  const updateProfile = async (updates: Record<string, any>) => {
+  const updateProfile = async (updates: { display_name?: string; interests?: string[]; avatar_url?: string }) => {
     if (!user) return;
     const { error } = await supabase.from("profiles").update(updates).eq("user_id", user.id);
     if (error) { toast.error("Failed to update"); return; }
